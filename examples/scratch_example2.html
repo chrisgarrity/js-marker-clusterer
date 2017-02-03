@@ -1,0 +1,97 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MarkerClusterer v3 Simple Example</title>
+    <style >
+      body {
+        margin: 0;
+        padding: 10px 20px 20px;
+        font-family: Arial;
+        font-size: 16px;
+      }
+      #map-container {
+        width: 100%;
+      }
+      #map {
+        width: 100%;
+        height: 500px;
+      }
+    </style>
+
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="locations.json"></script>
+    <script type="text/javascript" src="../src/markerclusterer.js"></script>
+
+    <script>
+    var styles = [{
+      url: '../images/circle1.png',
+      height: 20,
+      width: 20,
+      anchor: [0, 0],
+      textColor: '#ffffff',
+      textSize: 11
+    }, {
+      url: '../images/circle2.png',
+      height: 40,
+      width: 40,
+      anchor: [0, 0],
+      textColor: '#ffffff',
+      textSize: 12
+    }, {
+      url: '../images/circle3.png',
+      height: 60,
+      width: 60,
+      anchor: [0, 0],
+      textColor: '#ffffff',
+      textSize: 12
+    }, {
+      url: '../images/circle4.png',
+      height: 90,
+      width: 90,
+      anchor: [0, 0],
+      textColor: '#ffffff',
+      textSize: 12
+    }];
+
+      function initialize() {
+        var center = new google.maps.LatLng(20.4419, -32.1419);
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 2,
+          center: center,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var infowindow = new(google.maps.InfoWindow);
+
+        var markers = locations.map(function(location, i) {
+            var marker = new google.maps.Marker({
+              position: {lat: location[0], lng: location[1]},
+              map: map,
+              label: i,
+              icon: '../images/cpin.png'
+            });
+            marker.addListener('click', function() {
+                infowindow.setContent('<a href="/events/' + location[3] + '">' + location[2] + '</a>');
+                infowindow.open(map, marker);
+            });
+            return marker;
+          });
+
+        var markerCluster = new MarkerClusterer(map, markers, {
+            gridSize: 40,
+            styles: styles,
+            minimumClusterSize: 4
+        });
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+
+  </head>
+  <body>
+    <h3>Scratch Day Map Cluster example, 2016 location data</h3>
+    <div id="map-container"><div id="map"></div></div>
+  </body>
+</html>
